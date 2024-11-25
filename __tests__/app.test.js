@@ -86,13 +86,13 @@ describe("GET /api/articles/:article_id", () => {
   })
 })
 
-describe.skip("GET /api/articles", () => {
+describe("GET /api/articles", () => {
   test("200: Responds with an array of article each with the correct properties", () => {
     return request(app)
       .get('/api/articles')
       .expect(200)
       .then(({ body: { articles } }) => {
-        expect(article).toHaveLength(13)
+        expect(articles).toHaveLength(13)
         articles.forEach((article) => {
           expect(article).toMatchObject(
             {
@@ -110,14 +110,12 @@ describe.skip("GET /api/articles", () => {
       })
   })
 
-  test("404: Responds with an error if the route does not exist", () => {
+  test("404: responds with error if the route doesn't exist", () => {
     return request(app)
-      .get('/api/nonexistent')
+      .get('/api/banana')
       .expect(404)
       .then(({ body }) => {
         expect(body.msg).toBe('Route not found')
       })
   })
-
-  // You could also add tests for other edge cases here if necessary
 })
