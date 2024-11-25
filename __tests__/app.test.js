@@ -1,11 +1,12 @@
 const endpointsJson = require("../endpoints.json");
-/* Set up your test imports here */
 const app= require('../app')
 const request = require('supertest');
 const seed = require('../db/seeds/seed');
 const data = require('../db/data/test-data');
 const db = require('../db/connection');
+/* Set up your test imports here */
 /* Set up your beforeEach & afterAll functions here */
+
 
 beforeEach(() => {
   return seed(data);
@@ -16,7 +17,7 @@ afterAll(() => {
 })
 
 
-describe.skip("GET /api", () => {
+describe("GET /api", () => {
   test("200: Responds with an object detailing the documentation for each endpoint", () => {
     return request(app)
       .get("/api")
@@ -27,7 +28,7 @@ describe.skip("GET /api", () => {
   });
 });
 
-describe.skip("GET /api/topics", () => {
+describe("GET /api/topics", () => {
   test("200: Responds with an array of topics, each with slug and description properties", () => {
     return request(app)
       .get("/api/topics")
@@ -45,7 +46,7 @@ describe.skip("GET /api/topics", () => {
   })
 })
 
-describe.skip("GET /api/articles/:article_id", () => {
+describe("GET /api/articles/:article_id", () => {
   test("200: Responds with an article object each with the correct properties", () => {
     return request(app)
       .get('/api/articles/1')  
