@@ -4,6 +4,7 @@ const request = require('supertest');
 const seed = require('../db/seeds/seed');
 const data = require('../db/data/test-data');
 const db = require('../db/connection');
+require('jest-sorted');
 /* Set up your test imports here */
 /* Set up your beforeEach & afterAll functions here */
 
@@ -116,6 +117,57 @@ describe("GET /api/articles", () => {
       .expect(404)
       .then(({ body }) => {
         expect(body.msg).toBe('Route not found')
+      })
+  })
+})
+
+
+describe("GET /api/articles/:article_id/comments", () => {
+  test("200: Responds with an array of comments for a given article_id, each comment with correct properties", () => {
+    return request(app)
+      .get('/api/articles/1/comments')
+      .expect(200)
+      .then(({ body: { comments } }) => {
+        expect(comments).toHaveLength(11)
+        comments.forEach((comment) => {
+          expect(comment).toMatchObject(
+            {
+              comment_id: expect.any(Number),
+              votes: expect.any(Number),
+              created_at: expect.any(String),
+              author: expect.any(String),
+              body: expect.any(String),
+              article_id: expect.any(Number),
+            }
+          )
+        })
+      })
+  })
+
+  test("404: if no comments are found for the given article_id, respond with an errror", () => {
+    return request(app)
+      .get('/api/articles/2/comments')
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe('No comments')
+      })
+  })
+
+  test("400: if given an invalid article_id, respond with an error", () => {
+    return request(app)
+      .get('/api/articles/bananas/comments')
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe('invalid article id')
+      })
+  })
+
+  test("200: Responds with comments sorted by most recent first", () => {
+    return request(app)
+      .get('/api/articles/1/comments')
+      .expect(200)
+      .then(({ body: { comments } }) => {
+        expect(comments).toBeSortedBy('created_at', { descending: true })
       })
   })
 })
