@@ -1,6 +1,7 @@
 const {getApi}=require('./controller/api.controller')
 const { getTopics } = require('./controller/topics.controller')
 const { getArticleById, getAllArticles} = require('./controller/articles.controller')
+const { getCommentsByArticleId } = require('./controller/comments.controller')
 const express = require('express')
 const app = express();
 
@@ -13,6 +14,8 @@ app.get('/api/topics', getTopics)
 app.get('/api/articles/:article_id', getArticleById)
 
 app.get('/api/articles', getAllArticles)
+
+app.get('/api/articles/:article_id/comments', getCommentsByArticleId)
 
 app.all('*', (req, res) => {
     res.status(404).send({ msg: 'Route not found' });
