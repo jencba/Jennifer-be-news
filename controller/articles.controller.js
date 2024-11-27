@@ -1,5 +1,5 @@
-const { fetchArticleById } = require('../models/articles.model');
-const { fetchAllArticles } = require('../models/articles.model')
+const { fetchArticleById, fetchAllArticles, updateArticleVotes } = require('../models/articles.model');
+
 
 exports.getArticleById = (req, res, next) => {
   const { article_id } = req.params
@@ -29,4 +29,23 @@ exports.getAllArticles = (req, res, next) => {
       .catch((err) => {
         next(err)
       });
-  };
+  }
+  
+
+exports.updateArticleVotes = (req, res, next) => {
+    const { article_id } = req.params
+    const { inc_votes } = req.body
+const parsedArticleId = parseInt(article_id, 10)
+    if (isNaN(parsedArticleId)) {
+      return res.status(400).send({ msg: 'Invalid article id' })
+    }
+  
+    updateArticleVotes(parsedArticleId, inc_votes)
+      .then((updatedArticle) => {
+        if (!updatedArticle) {
+          return res.status(404).send({ msg: 'Article not found' })
+        }
+        res.status(200).send({ article: updatedArticle })
+      })
+      .catch(next)
+  }
