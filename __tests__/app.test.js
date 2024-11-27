@@ -185,24 +185,7 @@ describe("POST /api/articles/:article_id/comments", () => {
   })
 })
 
-describe("POST /api/articles/:article_id/comments", () => {
-  test("201: responds with the posted comment", () => {
-    const newComment = {
-      username: 'butter_bridge',
-      body: 'comment',
-    }
-
-    return request(app)
-       .post('/api/articles/1/comments')
-      .send(newComment)
-      .expect(201)
-      .then(({ body }) => {
-        expect(body.comment).toMatchObject({
-          comment_id: expect.any(Number),
-          author: 'butter_bridge',
-          body: 'comment',
-          article_id: 1,
-          votes: 0,
+ 
 
 describe('PATCH /api/articles/:article_id', () => {
   
@@ -234,7 +217,7 @@ describe("DELETE /api/comments/:comment_id", () => {
     return request(app)
       .delete('/api/comments/1') 
       .expect(204)
-  });
+  })
 
   
   test("404:responds with error if the comment does not exist", () => {
@@ -251,7 +234,9 @@ describe("DELETE /api/comments/:comment_id", () => {
       .delete('/api/comments/banana') 
       .expect(400) 
       .then(({ body }) => {
-        expect(body.msg).toBe('Invalid comment ID');
+        expect(body.msg).toBe('Invalid comment ID')
+
+      })
 
 
   test('400: responds with error if article id is invalid', () => {
@@ -267,16 +252,27 @@ describe("DELETE /api/comments/:comment_id", () => {
   })
 
 
-  test('404:Responds with error if article does not exist', () => {
-    const updateVotes = { inc_votes: 5 }
-    
-    return request(app)
-    .patch('/api/articles/999999')  
-      .send(updateVotes)
-      .expect(404)
-      .then(({ body }) => {
-        expect(body.msg).toBe('Article not found');
 
-      })
   })
+})
+
+describe("GET /api/users", () => {
+    test("200: responds with an array of users with their properties properties", () => {
+      return request(app)
+        .get("/api/users")
+        .expect(200)
+        .then(({ body: { users } }) => {
+          expect(users).toHaveLength(4)
+          users.forEach((user) => {
+            expect(user).toMatchObject({
+              username: expect.any(String),
+              name: expect.any(String),
+              avatar_url: expect.any(String),
+            })
+          })
+        })
+    })
+
+  
+  
 })

@@ -28,6 +28,24 @@
       ]
     }
   },
+  "GET /api/users": {
+    "description": "Serves an array of all users.",
+    "queries": [],
+    "exampleResponse": {
+      "users": [
+        {
+          "username": "weegembump",
+          "name": "James",
+          "avatar_url": "https://example.com/avatar.jpg"
+        },
+        {
+          "username": "butter_bridge",
+          "name": "Mitch",
+          "avatar_url": "https://example.com/avatar2.jpg"
+        }
+      ]
+    }
+  },
   "GET /api/articles/:article_id/comments": {
     "description": "Fetches all comments for a given article ID. Returns an array of comments, sorted by most recent first.",
     "params": [
@@ -70,12 +88,5 @@
         "body": "This is a comment."
       }
     }
-  },
-  "DELETE /api/comments/:comment_id": {
-    "description": "Deletes comment by comment ID. Responds with status 204 and no content.",
-    "params": [
-      { "comment_id": "id to be deleted" }
-    ],
-    "exampleResponse": null
   }
 }
