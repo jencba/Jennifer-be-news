@@ -1,7 +1,7 @@
 const {getApi}=require('./controller/api.controller')
 const { getTopics } = require('./controller/topics.controller')
 const { getArticleById, getAllArticles} = require('./controller/articles.controller')
-const { getCommentsByArticleId, addComment } = require('./controller/comments.controller')
+const { getCommentsByArticleId, addComment,deleteComment } = require('./controller/comments.controller')
 const express = require('express')
 const app = express();
 
@@ -17,7 +17,9 @@ app.get('/api/articles', getAllArticles)
 
 app.get('/api/articles/:article_id/comments', getCommentsByArticleId)
 
-app.post('/api/articles/:article_id/comments', addComment);
+app.post('/api/articles/:article_id/comments', addComment)
+
+app.delete('/api/comments/:comment_id', deleteComment)
 
 app.all('*', (req, res) => {
     res.status(404).send({ msg: 'Route not found' })
@@ -27,5 +29,6 @@ app.all('*', (req, res) => {
     res.status(err.status || 500).send({ msg: err.msg || 'Internal Server Error' })
   })
   
+
 
 module.exports=app

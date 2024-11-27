@@ -187,3 +187,54 @@ describe("POST /api/articles/:article_id/comments", () => {
       })
   })
 })
+
+describe("POST /api/articles/:article_id/comments", () => {
+  test("201: responds with the posted comment", () => {
+    const newComment = {
+      username: 'butter_bridge',
+      body: 'comment',
+    }
+
+    return request(app)
+       .post('/api/articles/1/comments')
+      .send(newComment)
+      .expect(201)
+      .then(({ body }) => {
+        expect(body.comment).toMatchObject({
+          comment_id: expect.any(Number),
+          author: 'butter_bridge',
+          body: 'comment',
+          article_id: 1,
+          votes: 0,
+          created_at: expect.any(String),
+        })
+      })
+  })
+})
+
+describe("DELETE /api/comments/:comment_id", () => {
+  test("204: deletes a comment by its ID", () => {
+    return request(app)
+      .delete('/api/comments/1') 
+      .expect(204)
+  });
+
+  
+  test("404:responds with error if the comment does not exist", () => {
+    return request(app)
+      .delete('/api/comments/999999')
+      .expect(404) 
+      .then(({ body }) => {
+        expect(body.msg).toBe('Comment not found')
+      })
+  })
+
+  test("400: Responds with error if commentid is invalid", () => {
+    return request(app)
+      .delete('/api/comments/banana') 
+      .expect(400) 
+      .then(({ body }) => {
+        expect(body.msg).toBe('Invalid comment ID');
+      })
+  })
+})
