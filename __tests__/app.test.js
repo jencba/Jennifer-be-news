@@ -5,9 +5,6 @@ const seed = require('../db/seeds/seed');
 const data = require('../db/data/test-data');
 const db = require('../db/connection');
 require('jest-sorted');
-/* Set up your test imports here */
-/* Set up your beforeEach & afterAll functions here */
-
 
 beforeEach(() => {
   return seed(data);
@@ -206,10 +203,30 @@ describe("POST /api/articles/:article_id/comments", () => {
           body: 'comment',
           article_id: 1,
           votes: 0,
+
+describe('PATCH /api/articles/:article_id', () => {
+  
+  test('200: Successfully update votes when votes are provided', () => {
+    const updateVotes = { inc_votes: 5 }
+    
+    return request(app)
+      .patch('/api/articles/1')  
+      .send(updateVotes)
+      .expect(200)
+      .then(({ body }) => {
+        expect(body.article.votes).toBeGreaterThan(0)
+        expect(body.article).toMatchObject({
+          article_id: 1,
+          votes: expect.any(Number),
+          title: expect.any(String),
+          author: expect.any(String),
+          body: expect.any(String),
+
           created_at: expect.any(String),
         })
       })
   })
+
 })
 
 describe("DELETE /api/comments/:comment_id", () => {
@@ -235,6 +252,31 @@ describe("DELETE /api/comments/:comment_id", () => {
       .expect(400) 
       .then(({ body }) => {
         expect(body.msg).toBe('Invalid comment ID');
+
+
+  test('400: responds with error if article id is invalid', () => {
+    const updateVotes = { inc_votes: 1 }
+    
+    return request(app)
+      .patch('/api/articles/bananas')
+      .send(updateVotes)
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe('Invalid article id')
+      })
+  })
+
+
+  test('404:Responds with error if article does not exist', () => {
+    const updateVotes = { inc_votes: 5 }
+    
+    return request(app)
+    .patch('/api/articles/999999')  
+      .send(updateVotes)
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe('Article not found');
+
       })
   })
 })
