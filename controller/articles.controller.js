@@ -29,7 +29,6 @@ exports.getAllArticles = (req, res, next) => {
       .catch((err) => {
         next(err)
       });
-  }
   
 
 exports.updateArticleVotes = (req, res, next) => {
@@ -48,4 +47,5 @@ const parsedArticleId = parseInt(article_id, 10)
         res.status(200).send({ article: updatedArticle })
       })
       .catch(next)
+
   }

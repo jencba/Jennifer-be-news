@@ -70,5 +70,12 @@
         "body": "This is a comment."
       }
     }
+  },
+  "DELETE /api/comments/:comment_id": {
+    "description": "Deletes comment by comment ID. Responds with status 204 and no content.",
+    "params": [
+      { "comment_id": "id to be deleted" }
+    ],
+    "exampleResponse": null
   }
 }
