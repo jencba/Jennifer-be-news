@@ -10,5 +10,11 @@ require('dotenv').config({
 if (!process.env.PGDATABASE) {
   throw new Error('PGDATABASE not set');
 }
+const config = {};
 
-module.exports = new Pool();
+if (ENV === "production") {
+  config.connectionString = process.env.DATABASE_URL;
+  config.max = 2
+}
+
+module.exports = new Pool(config);
