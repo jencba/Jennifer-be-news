@@ -85,7 +85,7 @@ describe("GET /api/articles/:article_id", () => {
 })
 
 describe("GET /api/articles", () => {
-  test("200: Responds with an array of article each with the correct properties", () => {
+  test("200: Responds with an array of article each with the correct properties, automatically sorted by created by, descending ", () => {
     return request(app)
       .get('/api/articles')
       .expect(200)
@@ -104,6 +104,37 @@ describe("GET /api/articles", () => {
               comment_count: expect.any(Number),
             }
           )
+        })
+        expect(articles).toBeSortedBy('created_at', { descending: true })
+      })
+  })
+
+  test("200:responds with articles sorted by a certain property in descending order by default", () => {
+    return request(app)
+      .get('/api/articles?sort_by=votes')
+      .expect(200)
+      .then(({ body: { articles } }) => {
+        expect(articles).toBeSortedBy('votes',{ descending: true });
+      })
+  })
+
+  test("200: responds with articles sorted by a certain  property in ascending order", () => {
+    return request(app)
+      .get('/api/articles?sort_by=votes&order=asc')
+      .expect(200)
+      .then(({ body: { articles } }) => {
+        expect(articles).toBeSortedBy('votes',{ ascending: true });
+      })
+  })
+
+  test("200: responds with articles filtered by a chosen topic ", () => {
+    return request(app)
+      .get('/api/articles?topic=mitch')
+      .expect(200)
+      .then(({ body: { articles } }) => {
+        expect(articles).toHaveLength(12)
+        articles.forEach((article) => {
+          expect(article.topic).toBe('mitch')
         })
       })
   })
@@ -237,7 +268,7 @@ describe("DELETE /api/comments/:comment_id", () => {
         expect(body.msg).toBe('Invalid comment ID')
 
       })
-
+    })
 
   test('400: responds with error if article id is invalid', () => {
     const updateVotes = { inc_votes: 1 }
@@ -253,7 +284,7 @@ describe("DELETE /api/comments/:comment_id", () => {
 
 
 
-  })
+ 
 })
 
 describe("GET /api/users", () => {
